@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">97.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>39/40</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">91.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>11/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>33/33</span>
             </div>
         
             
@@ -110,12 +110,28 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">11x</span>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">8x</span>
@@ -146,6 +162,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,12 +186,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { notFoundError, roomIsFullError } from "@/errors";
-import { cannotListHotelsError } from "@/errors/cannot-list-hotels-error";
-import { bookingRepository } from "@/repositories/booking-repository";
-import enrollmentRepository from "@/repositories/enrollment-repository";
-import { roomRepository } from "@/repositories/rooms-repository";
-import ticketRepository from "@/repositories/ticket-repository";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { notFoundError, roomIsFullError, unauthorizedError } from '@/errors';
+import { cannotListHotelsError } from '@/errors/cannot-list-hotels-error';
+import { bookingRepository } from '@/repositories/booking-repository';
+import enrollmentRepository from '@/repositories/enrollment-repository';
+import { roomRepository } from '@/repositories/rooms-repository';
+import ticketRepository from '@/repositories/ticket-repository';
+import { Booking } from '@prisma/client';
 &nbsp;
 const validateEnrollmentAndTicket = async (userId: number) =&gt; {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
@@ -173,7 +204,7 @@ const validateEnrollmentAndTicket = async (userId: number) =&gt; {
 &nbsp;
   const ticket = await ticketRepository.findTicketByEnrollmentId(enrollment.id);
 &nbsp;
-  if (!ticket || ticket.status === "RESERVED" || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
+  if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
     throw cannotListHotelsError();
   }
 };
@@ -199,10 +230,24 @@ const getAllBookingsByUserId = async (userId: number) =&gt; {
   return userBookings;
 };
 &nbsp;
+const tryUpdateBookingById = async (userBookings: Booking[], bookingId: number, roomId: number) =&gt; {
+  const isValidRoom = await roomRepository.findRoomById(roomId);
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!isValidRoom) <span class="cstat-no" title="statement not covered" >throw notFoundError();</span>
+&nbsp;
+  const bookingsAtValidRoom = await bookingRepository.findManyBookingsByRoomId(roomId);
+  if (bookingsAtValidRoom.length === isValidRoom.capacity) throw roomIsFullError();
+&nbsp;
+  const userBookingsId = userBookings.map((booking) =&gt; booking.id);
+  if (!userBookingsId.includes(bookingId)) throw unauthorizedError();
+&nbsp;
+  return await bookingRepository.updateOneBooking(bookingId, roomId);
+};
+&nbsp;
 export const bookingsService = {
   validateEnrollmentAndTicket,
   createNeWBooking,
   getAllBookingsByUserId,
+  tryUpdateBookingById,
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -211,7 +256,7 @@ export const bookingsService = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri Feb 10 2023 19:20:19 GMT-0300 (Brasilia Standard Time)
+                at Sun Feb 12 2023 21:46:32 GMT-0300 (Brasilia Standard Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
